@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+/* Dark mode is a class on <html> (toggled by ThemeToggle), not the OS setting. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens taken from SyntaxUI: Geist type, the #fb3a5d red accent, its gray overrides. */
+@theme {
+  --font-sans: "Geist", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-display: "Geist", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --color-red-500: #fb3a5d;
+  --color-gray-100: #fafafa;
+  --color-gray-600: #666666;
+  --color-gray-700: #333333;
+  --color-gray-800: #222222;
+}
+
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+body { margin: 0; background: #ffffff; color: #18181b; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+html.dark body { background: #18181b; color: #f4f4f5; }
+::selection { background: rgb(251 58 93 / 0.25); }
+
+/* Colours for the Idea Terrain canvas (it reads these CSS variables; hex only). */
+.terrain-theme {
+  --terrain-0: #f4f4f5; --terrain-1: #fed7dc; --terrain-2: #fb8da0; --terrain-3: #fb3a5d; --terrain-4: #9f1239;
+  --terrain-accent: #0ea5e9; --terrain-open: #10b981; --terrain-you: #f59e0b; --terrain-text: #71717a;
+}
+.dark .terrain-theme {
+  --terrain-0: #27272a; --terrain-1: #4a1d2a; --terrain-2: #8f2a45; --terrain-3: #fb3a5d; --terrain-4: #ffd1da;
+  --terrain-accent: #38bdf8; --terrain-open: #34d399; --terrain-you: #fbbf24; --terrain-text: #a1a1aa;
+}
+
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } }
+.rise { animation: rise 420ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+@keyframes blink { 50% { opacity: 0; } }
+.caret { animation: blink 1s steps(1) infinite; }
+
+/* SyntaxUI Shimmer Button: highlight sweeping along the frame. */
+@keyframes shimmer-sweep { from { background-position: 200% 0; } to { background-position: -100% 0; } }
+.shimmer-frame {
+  background: linear-gradient(120deg, #ff98a4 0%, #ff98a4 35%, #f6f6f6 50%, #ff98a4 65%, #ff98a4 100%);
+  background-size: 300% 100%;
+  animation: shimmer-sweep 3s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite;
+}
+
+/* SyntaxUI Animated Badge: conic border that orbits the pill. */
+@property --orbit-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@property --orbit-x { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@keyframes orbit-angle { to { --orbit-angle: 360deg; } }
+@keyframes orbit-x { 0%, 100% { --orbit-x: 50px; } 50% { --orbit-x: -50px; } }
+.orbit-border {
+  background: conic-gradient(from calc(var(--orbit-angle) + 60deg) at calc(50% + var(--orbit-x)) 50%, transparent 50%, #fb3a5d 98%, transparent 100%);
+  animation: orbit-angle 6s linear infinite, orbit-x 6s 0.5s ease-in-out infinite;
+}
+
+/* SyntaxUI Pulsating Dots. */
+@keyframes pulse-dot { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.5); opacity: 1; } }
+.pulse-dot { animation: pulse-dot 1s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .caret, .shimmer-frame, .orbit-border, .pulse-dot { animation: none; }
+}
